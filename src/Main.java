@@ -6,7 +6,6 @@ import java.net.MulticastSocket;
 public class Main {
     public static void main(String[] args) {
 
-
         int portnumber = 8880;
         if (args.length >= 1){
             portnumber = Integer.parseInt(args[0]);
@@ -25,20 +24,20 @@ public class Main {
                 DatagramPacket data = new DatagramPacket(buf, buf.length);
                 serverMulticastSocket.receive(data);
                 String msg = new String(data.getData()).trim();
-                System.out.println("Message recived from client = " + msg);
-                double resultat = räknare(msg);
-                data = new DatagramPacket(msg.getBytes(), 0, msg.length(), group, portnumber);
-                serverMulticastSocket.send(data);
-
+                int resultat = räknare(msg);
+                String svar = String.valueOf(resultat);
+                DatagramPacket resultatet = new DatagramPacket(svar.getBytes(),0, svar.length(), group, portnumber);
+                serverMulticastSocket.send(resultatet);
             }
+
             serverMulticastSocket.close();
         }catch (IOException ie){
             ie.printStackTrace();
         }
     }
-    private static double räknare(String matteTal){
+    private static int räknare(String matteTal){
         if(matteTal.contains("+")){
-            String[] tal =matteTal.split("+".toString());
+            String[] tal =matteTal.split("\\+");
             int tal1 = Integer.parseInt(tal[0]);
             int tal2 = Integer.parseInt(tal[1]);
             return tal1+tal2;
@@ -50,7 +49,7 @@ public class Main {
             return tal1-tal2;
         }
         else if(matteTal.contains("*")){
-            String[] tal =matteTal.split("x");
+            String[] tal =matteTal.split("\\*");
             int tal1 = Integer.parseInt(tal[0]);
             int tal2 = Integer.parseInt(tal[1]);
             return tal1*tal2;
