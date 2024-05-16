@@ -19,50 +19,51 @@ public class Main {
             System.out.println("joinGroup method is called...");
             boolean infinite = true;
 
-            while(infinite){
                 byte buf[] = new byte[1024];
                 DatagramPacket data = new DatagramPacket(buf, buf.length);
                 serverMulticastSocket.receive(data);
                 String msg = new String(data.getData()).trim();
-                int resultat = räknare(msg);
-                String svar = String.valueOf(resultat);
-                DatagramPacket resultatet = new DatagramPacket(svar.getBytes(),0, svar.length(), group, portnumber);
+                String resultat = räknare(msg);
+                System.out.println("Resultat: " + resultat);
+                DatagramPacket resultatet = new DatagramPacket(resultat.getBytes(), resultat.getBytes().length, group, portnumber);
                 serverMulticastSocket.send(resultatet);
-            }
 
             serverMulticastSocket.close();
         }catch (IOException ie){
             ie.printStackTrace();
         }
     }
-    private static int räknare(String matteTal){
+    private static String räknare(String matteTal){
         if(matteTal.contains("+")){
             String[] tal =matteTal.split("\\+");
             int tal1 = Integer.parseInt(tal[0]);
             int tal2 = Integer.parseInt(tal[1]);
-            return tal1+tal2;
+            String talet = String.valueOf(tal1+tal2);
+            return tal[0] + "+"+ tal[1] + " = " + talet;
         }
         else if(matteTal.contains("-")){
             String[] tal =matteTal.split("-");
             int tal1 = Integer.parseInt(tal[0]);
             int tal2 = Integer.parseInt(tal[1]);
-            return tal1-tal2;
+            String talet = String.valueOf(tal1-tal2);
+            return tal[0] + "-"+ tal[1] + " = " + talet;
         }
         else if(matteTal.contains("*")){
             String[] tal =matteTal.split("\\*");
             int tal1 = Integer.parseInt(tal[0]);
             int tal2 = Integer.parseInt(tal[1]);
-            return tal1*tal2;
+            String talet = String.valueOf(tal1*tal2);
+            return tal[0] + "*"+ tal[1] + " = " + talet;
         }
         else if(matteTal.contains("/")){
             String[] tal =matteTal.split("/");
             int tal1 = Integer.parseInt(tal[0]);
             int tal2 = Integer.parseInt(tal[1]);
-            return tal1/tal2;
+            String talet = String.valueOf(tal1/tal2);
+            return tal[0] + "/"+ tal[1] + " = " + talet;
         }
         else {
-            System.out.println("Invalid input...");
-            return 0;
+            return "Fel input";
         }
     }
 }
